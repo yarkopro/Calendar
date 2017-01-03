@@ -11,6 +11,7 @@ public class Main {
             System.err.println("Incorrect month value.");
         } catch (Exception e){
             System.err.println("Some error occurred.");
+            e.printStackTrace();
         }
     }
 }
