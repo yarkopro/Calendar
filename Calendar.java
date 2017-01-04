@@ -10,35 +10,33 @@ public class Calendar {
     public final static String RESET = "\u001B[0m";  //this sequences might not work properly in some terminals
 
     private LocalDate today;             //date of current day
-    private ArrayList<LocalDate> daysOfMonth;
+    private LocalDate firstDayOfMonth;
 
     Calendar(){
         today = LocalDate.now();
-        daysOfMonth = new ArrayList<>();
-        for(int i = 1; i <= this.today.lengthOfMonth(); i++) daysOfMonth.add(today.withDayOfMonth(i));
+        firstDayOfMonth = today.withDayOfMonth(1);
     }
 
     Calendar(int monthNumber){
         if (monthNumber>12||monthNumber<1) throw new IllegalArgumentException();
         today = LocalDate.now();
-        daysOfMonth = new ArrayList<>();
-        daysOfMonth.add(LocalDate.of(today.getYear(), monthNumber, 1));
-        for(int i = 2; i <= daysOfMonth.get(0).lengthOfMonth(); i++)
-            this.daysOfMonth.add(daysOfMonth.get(0).withDayOfMonth(i));
+        firstDayOfMonth = LocalDate.of(today.getYear(), monthNumber, 1);
     }
 
     public void show(){           //printing the grid
-        System.out.println(daysOfMonth.get(0).getMonth() + "\nMON TUE WED THR FRI SAT SUN");
+        System.out.println(firstDayOfMonth.getMonth() + "\nMON TUE WED THR FRI SAT SUN");
           //printing free spaces before the first day of specified month in grid
-        for (int i = 1; i < daysOfMonth.get(0).getDayOfWeek().getValue(); i++) System.out.print("    ");
-        for(LocalDate x : daysOfMonth){
-            if(x.equals(today)) System.out.print(BLUE+x.getDayOfMonth() + "  " + RESET);
-            else if(x.getDayOfWeek() == DayOfWeek.SATURDAY || x.getDayOfWeek() == DayOfWeek.SUNDAY)
-                System.out.print(RED+x.getDayOfMonth() + "  " + RESET);
-            else System.out.print(x.getDayOfMonth() + "  ");
+        for (int i = 1; i < firstDayOfMonth.getDayOfWeek().getValue(); i++) System.out.print("    ");
+        LocalDate thisDay;
+        for(int i = 1; i < firstDayOfMonth.lengthOfMonth(); i++){
+            thisDay = firstDayOfMonth.withDayOfMonth(i);
+            if(thisDay.equals(today)) System.out.print(BLUE+thisDay.getDayOfMonth() + "  " + RESET);
+            else if(thisDay.getDayOfWeek() == DayOfWeek.SATURDAY || thisDay.getDayOfWeek() == DayOfWeek.SUNDAY)
+                System.out.print(RED+thisDay.getDayOfMonth() + "  " + RESET);
+            else System.out.print(thisDay.getDayOfMonth() + "  ");
               //printing additional space between daysOfMonth if current day of month is only one digit
-            if (x.getDayOfMonth() < 10) System.out.print(" ");
-            if (x.getDayOfWeek() == DayOfWeek.SUNDAY) System.out.print("\n");
+            if (thisDay.getDayOfMonth() < 10) System.out.print(" ");
+            if (thisDay.getDayOfWeek() == DayOfWeek.SUNDAY) System.out.print("\n");
         }
     }
 }
